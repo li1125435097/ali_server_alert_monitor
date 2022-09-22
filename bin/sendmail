@@ -1,0 +1,21 @@
+#! /bin/bash
+# argv1 邮件名称
+# argv2 邮件内容 
+# argv3 联系人列表文件 
+
+bin='/home/deployer/serverMonitor/bin'
+meta='/home/deployer/serverMonitor/metadata'
+[ $1 ] && title=$1 || tels='ssp-api告警'
+[ $2 ] && mailtext=$2 || `echo '邮件内容为空';exit 0` 
+[ $3 ] && tels=$3 || tels='api'
+
+# 获取联系人
+contact=`$bin/get_contact $tels`
+
+# 遍历联系人，发送邮件
+for v in $contact
+do
+  mailx -s $title $v < $mailtext
+  sleep 1 
+done
+

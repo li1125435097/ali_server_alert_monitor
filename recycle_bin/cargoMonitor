@@ -1,0 +1,38 @@
+#! /bin/bash
+# argv1 cargo文件阈值，可不传
+
+[ $1 ] && CARGONUM=$1 || CARGONUM=20   # cargo文件阈值,传参1使用参数1，否则默认20
+
+bin='/home/deployer/serverMonitor/bin'
+meta='/home/deployer/serverMonitor/metadata'
+log='/home/deployer/serverMonitor/log/log'
+mailtext=$meta/mail_text_cargo
+
+ips=`$bin/get_ip`
+send="$bin/sendmail cargo告警 $mailtext"
+
+DATE=`date "+%F %X"`
+echo '' > $mailtext
+
+# 循环获取集群服务器cargo文件个数，大于阈值者入邮件元数据
+for i in $ips
+do
+  num=`ssh  -o "StrictHostKeyChecking=no" $i "ls -1 ~/api-advert-srv/current/cargo_files/|wc -l"`
+  if [ $num -gt $CARGONUM ];then
+      echo "ip: $i file_num: $num " >> $mailtext
+  fi
+done
+
+
+# 记录行数统计
+rows=`cat $mailtext | wc -l`
+
+# 行数大于1，发送邮件并记录日志，小于1只记录日志
+if [ $rows -gt 1 ]
+then
+ echo $DATE >>  $mailtext
+ cat $mailtext >> $log
+ $send
+else
+ echo '检查正常':$DATE >> $log
+fi

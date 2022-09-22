@@ -1,0 +1,7 @@
+#! /bin/bash
+# argv1 联系人文件名
+bin='/home/deployer/serverMonitor/bin'
+meta='/home/deployer/serverMonitor/metadata'
+
+file=$meta/contact_$1
+cat $file

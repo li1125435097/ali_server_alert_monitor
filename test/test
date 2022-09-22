@@ -1,0 +1,14 @@
+#! /bin/bash
+
+bin='/home/deployer/serverMonitor/bin'
+meta='/home/deployer/serverMonitor/metadata'
+
+ips=`$bin/get_ip`
+contact=`$bin/get_contact`
+
+for v in $ips
+do 
+  echo $v'hello'
+done
+
+echo $contact

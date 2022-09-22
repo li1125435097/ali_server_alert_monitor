@@ -1,0 +1,4 @@
+#! /bin/bash
+
+/usr/local/bin/aliyun ecs DescribeInstances --PageSize  50 --Tag.N.key ssp-api | \
+awk -F\" '/"PrivateIpAddress": "[^"]*"/ {print $4}'

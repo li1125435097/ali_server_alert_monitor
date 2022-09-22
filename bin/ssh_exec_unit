@@ -1,0 +1,24 @@
+#! /bin/bash
+# argv1 IP集合
+# argv2 服务器要运行的命令
+# argv3 告警条件
+# argv4 邮件文件路径
+
+ips=$1
+cmd=$2
+condition=$3
+file_path=$4
+
+bin='/home/deployer/serverMonitor/bin'
+
+for ip in $ips
+do
+  result=`ssh  -o "StrictHostKeyChecking=no" $ip $cmd`
+  if [ $result $condition ] 
+  then
+    echo "IP地址: $ip 结果: $result" >> $file_path
+  fi
+done
+
+
+

@@ -1,0 +1,3 @@
+./send '哈鲁利亚' ../metadata/mail_text_cargo api
+./ssh_exec_unit '172.31.0.37' 'ls -1 ~/api-advert-srv/current/cargo_files/|wc -l' '-gt -1' ../log/log 
+./serverMonitor/apps/cargo_monitor 0

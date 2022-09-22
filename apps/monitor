@@ -1,0 +1,21 @@
+#! /bin/bash
+# argv1 cargo文件阈值，可不传
+
+[ $1 ] && CARGONUM=$1 || CARGONUM=20   # cargo文件阈值,传参1使用参数1，否则默认20
+
+bin='/home/deployer/serverMonitor/bin'
+meta='/home/deployer/serverMonitor/metadata'
+file_path=$meta/mail_text_cargo   # 定义邮件文件
+echo '' > $file_path   # 初始化邮件内容文件
+
+
+# 报警逻辑
+ips=`$bin/get_ip`
+cmd='ls -1 /home/deployer/api-advert-srv/current/cargo_files/|wc -l'
+condition="-gt $CARGONUM"
+`$bin/ssh_exec_unit "$ips" "$cmd" "$condition" $file_path`
+
+# 发送邮件
+title='cargo告警'
+contact='api'
+`$bin/send $title $file_path $contact`
